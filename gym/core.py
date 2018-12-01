@@ -124,7 +124,7 @@ class Env(object):
         done = self.monitor._after_step(observation, reward, done, info)
         return observation, reward, done, info
 
-    def reset(self):
+    def reset(self,reset_args=None):
         """Resets the state of the environment and returns an initial
         observation. Will call 'configure()' if not already called.
 
@@ -137,7 +137,7 @@ class Env(object):
             self.configure()
 
         self.monitor._before_reset()
-        observation = self._reset()
+        observation = self._reset(reset_args)
         self.monitor._after_reset(observation)
         return observation
 

@@ -75,8 +75,12 @@ class MujocoEnv(gym.Env):
 
     # -----------------------------
 
-    def _reset(self):
+    def _reset(self,reset_args=None):
         mjlib.mj_resetData(self.model.ptr, self.data.ptr)
+        if reset_args is not None:
+            self.update_adversary(reset_args)
+        else:
+            self.update_adversary(np.random.uniform(0.25, 1.0))
         ob = self.reset_model()
         if self.viewer is not None:
             self.viewer.autoscale()
@@ -149,3 +153,8 @@ class MujocoEnv(gym.Env):
         high_adv = np.ones(adv_action_shape)*adv_max_force
         low_adv = -high_adv
         self.adv_action_space = spaces.Box(low_adv, high_adv)
+
+    def sample_goals(self, num_goals):
+        # Adversarial fraction
+        return np.random.uniform(0.25, 1.0, (num_goals, ))
+
